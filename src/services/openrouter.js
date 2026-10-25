@@ -9,7 +9,11 @@ const API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 // Core function: send a full conversation (array of {role, content}) and get
 // one reply back. Both sendMessage() below and the new chat assistant use this.
-export async function sendMessages(messages, model) {
+// `options` is an optional object of extra fields merged into the request
+// body, e.g. { max_tokens: 500 } to cap how long a reply can be. It defaults
+// to an empty object, so the Lab page (which doesn't pass it) keeps working
+// exactly as before.
+export async function sendMessages(messages, model, options = {}) {
   const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
 
   if (!apiKey || apiKey === "your_openrouter_key_here") {
@@ -29,7 +33,7 @@ export async function sendMessages(messages, model) {
         "HTTP-Referer": window.location.origin,
         "X-Title": "AI Micro-Lab",
       },
-      body: JSON.stringify({ model, messages }),
+      body: JSON.stringify({ model, messages, ...options }),
     });
   } catch {
     throw new Error("Network error. Check your internet connection and try again.");

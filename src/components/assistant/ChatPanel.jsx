@@ -3,7 +3,7 @@ import { X, Send, Bot, RotateCcw, AlertCircle } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import { useAssistantChat } from "../../hooks/useAssistantChat";
 
-export default function ChatPanel({ onClose }) {
+export default function ChatPanel({ onClose, onAddToBasket }) {
   const { messages, loading, error, sendUserMessage, retry, startNewConversation } = useAssistantChat();
   const [draft, setDraft] = useState("");
   const scrollRef = useRef(null);
@@ -64,7 +64,7 @@ export default function ChatPanel({ onClose }) {
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {messages.map((m, i) => (
-          <ChatMessage key={i} role={m.role} text={m.content} />
+          <ChatMessage key={i} role={m.role} text={m.content} products={m.products} onAddToBasket={onAddToBasket} />
         ))}
 
         {loading && (
@@ -95,25 +95,30 @@ export default function ChatPanel({ onClose }) {
       </div>
 
       {/* Input */}
-      <div className="flex items-end gap-2 border-t border-slate-100 p-3">
-        <textarea
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Ask about groceries, meals, allergies..."
-          rows={1}
-          aria-label="Message the assistant"
-          className="max-h-24 flex-1 resize-none rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-emerald-400 focus:outline-none"
-        />
-        <button
-          type="button"
-          onClick={handleSend}
-          disabled={!canSend}
-          aria-label="Send message"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <Send className="h-4 w-4" />
-        </button>
+      <div className="border-t border-slate-100 p-3">
+        <p className="mb-2 text-center text-[11px] text-slate-400">
+          Sample catalogue — prices and availability shown here are demo data, not live.
+        </p>
+        <div className="flex items-end gap-2">
+          <textarea
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask about groceries, meals, allergies..."
+            rows={1}
+            aria-label="Message the assistant"
+            className="max-h-24 flex-1 resize-none rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-emerald-400 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={!canSend}
+            aria-label="Send message"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Send className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

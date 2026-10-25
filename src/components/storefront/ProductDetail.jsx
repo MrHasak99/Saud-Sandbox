@@ -40,9 +40,20 @@ export default function ProductDetail({ product, onBack, onAddToBasket }) {
         <ProductImage emoji={product.emoji} className="h-48 w-full text-7xl" />
 
         <div>
-          {category && <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">{category.name}</p>}
+          {category && (
+            <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
+              {category.name}
+              {product.subcategory ? ` · ${product.subcategory}` : ""}
+            </p>
+          )}
           {product.brand && <p className="text-sm text-slate-500">{product.brand}</p>}
           <h2 className="mt-1 text-2xl font-bold text-slate-900">{product.name}</h2>
+          {/* Arabic name from the imported catalogue — shown for future bilingual/RTL readiness. */}
+          {product.nameAr && (
+            <p className="text-sm text-slate-400" dir="rtl">
+              {product.nameAr}
+            </p>
+          )}
           <p className="mt-2 text-sm text-slate-600">{product.description}</p>
 
           <div className="mt-4 flex items-center gap-3">
@@ -136,6 +147,27 @@ export default function ProductDetail({ product, onBack, onAddToBasket }) {
           <p className="text-sm text-slate-500">Nutrition information is not available for this product.</p>
         )}
       </div>
+
+      {/* Demo store layout info, from the imported catalogue's aisle/section/floor columns. */}
+      {(product.floor || product.aisle || product.section) && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
+          <h3 className="mb-3 text-sm font-semibold text-slate-900">Where to find it (demo store layout)</h3>
+          <dl className="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <dt className="text-slate-500">Floor</dt>
+              <dd className="font-medium text-slate-900">{product.floor || "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Aisle</dt>
+              <dd className="font-medium text-slate-900">{product.aisle || "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Section</dt>
+              <dd className="font-medium text-slate-900">{product.section || "—"}</dd>
+            </div>
+          </dl>
+        </div>
+      )}
     </div>
   );
 }

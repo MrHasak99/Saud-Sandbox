@@ -4,7 +4,7 @@ import ChatPanel from "./ChatPanel";
 
 // The floating assistant button + panel. Lives on top of the storefront as an
 // overlay — it never navigates away from the current page.
-export default function ChatWidget() {
+export default function ChatWidget({ onAddToBasket }) {
   const [open, setOpen] = useState(false);
 
   // Let shoppers press Escape to close the chat, like most dialogs/modals.
@@ -19,7 +19,7 @@ export default function ChatWidget() {
 
   return (
     <>
-      {open && <ChatPanel onClose={() => setOpen(false)} />}
+      {open && <ChatPanel onClose={() => setOpen(false)} onAddToBasket={onAddToBasket} />}
 
       <button
         type="button"

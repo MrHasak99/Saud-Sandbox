@@ -73,7 +73,7 @@ export default function Storefront() {
       </main>
 
       <StoreFooter />
-      <ChatWidget />
+      <ChatWidget onAddToBasket={basket.addItem} />
       <ProfilePanel
         open={profileOpen}
         onClose={() => setProfileOpen(false)}

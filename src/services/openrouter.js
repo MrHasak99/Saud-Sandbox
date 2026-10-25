@@ -1,10 +1,15 @@
 // Talks to OpenRouter's OpenAI-compatible chat endpoint.
 // NOTE: This runs in the browser, so the key is visible in DevTools.
-// That's fine for a personal sandbox with your own key. Never deploy it publicly.
+// That's fine for a personal sandbox with your own key, run only on your own
+// machine. Never deploy this app publicly with the key wired up this way —
+// a real production version must route this request through a backend
+// (e.g. a Supabase Edge Function) so the key never reaches the browser.
 
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-export async function sendMessage(prompt, model) {
+// Core function: send a full conversation (array of {role, content}) and get
+// one reply back. Both sendMessage() below and the new chat assistant use this.
+export async function sendMessages(messages, model) {
   const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
 
   if (!apiKey || apiKey === "your_openrouter_key_here") {
@@ -24,10 +29,7 @@ export async function sendMessage(prompt, model) {
         "HTTP-Referer": window.location.origin,
         "X-Title": "AI Micro-Lab",
       },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: "user", content: prompt }],
-      }),
+      body: JSON.stringify({ model, messages }),
     });
   } catch {
     throw new Error("Network error. Check your internet connection and try again.");
@@ -57,4 +59,10 @@ export async function sendMessage(prompt, model) {
     model: data.model || model,
     latencyMs: Math.round(performance.now() - startedAt),
   };
+}
+
+// Kept for the AI Micro-Lab (single prompt, no history). Just a thin wrapper
+// around sendMessages() so existing code keeps working unchanged.
+export async function sendMessage(prompt, model) {
+  return sendMessages([{ role: "user", content: prompt }], model);
 }
